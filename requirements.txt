@@ -1,0 +1,9 @@
+einops
+gradio
+torch
+transformers
+numpy
+sentencepiece
+# triton==2.0.0.dev20221202
+# -e git+https://github.com/samhavens/just-triton-flash.git#egg=flash_attn
+# RuntimeError: Triton requires CUDA 11.4+
