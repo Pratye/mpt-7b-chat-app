@@ -17,7 +17,7 @@ from transformers import (
 )
 
 if torch.backends.mps.is_available():
-    device = torch.device("mps")
+    device = torch.device("cpu")
 
 model_name = "mosaicml/mpt-7b-chat"
 max_new_tokens = 1536
@@ -32,12 +32,12 @@ print(f"Starting to load the model {model_name} into memory")
 
 m = AutoModelForCausalLM.from_pretrained(
     model_name,
-#    torch_dtype=torch.bfloat16,
+   torch_dtype=torch.bfloat16,
     trust_remote_code=True,
     use_auth_token=auth_token,
     max_seq_len=8192,
-    load_in_8bit=True,
-    device_map='auto'
+#     load_in_8bit=True,
+#     device_map='auto'
 )
 tok = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True, use_auth_token=auth_token)
 
@@ -123,7 +123,7 @@ def bot(history, temperature, top_p, top_k, repetition_penalty, conversation_id)
 
     # Tokenize the messages string
     input_ids = tok(messages, return_tensors="pt").input_ids
-    input_ids = input_ids.to('mps')
+    input_ids = input_ids.to('cpu')
     streamer = TextIteratorStreamer(tok, timeout=10.0, skip_prompt=True, skip_special_tokens=True)
     generate_kwargs = dict(
         input_ids=input_ids,
